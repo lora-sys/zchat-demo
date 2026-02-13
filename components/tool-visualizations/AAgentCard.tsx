@@ -35,7 +35,7 @@ export function AAgentCard({ status, result }: AAgentCardProps) {
         <div className="flex items-center gap-3 mb-4">
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
           >
             <Bot className="w-6 h-6 text-green-400" />
           </motion.div>
@@ -83,8 +83,7 @@ export function AAgentCard({ status, result }: AAgentCardProps) {
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          {result?.capabilities &&
-            result?.capabilities.map((cap) => (
+          {result?.capabilities?.map((cap) => (
               <div
                 key={cap}
                 className="flex items-center gap-1.5 bg-slate-800/50 rounded px-2 py-1.5 text-xs"

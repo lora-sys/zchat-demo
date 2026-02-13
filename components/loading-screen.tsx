@@ -40,7 +40,7 @@ export default function LoadingScreen({ onFinished }: { onFinished: () => void }
         <motion.div
           className="h-full bg-green-500"
           animate={{ x: [-192, 192] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2, ease: "linear" }}
         />
       </div>
     </div>

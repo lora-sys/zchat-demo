@@ -1,9 +1,9 @@
-"use client";
-import { motion } from "framer-motion";
-import { Radar, TrendingDown, TrendingUp, AlertTriangle } from "lucide-react";
-import { MockDataBadge } from "../mock-data-badge";
+'use client';
+import { motion } from 'framer-motion';
+import { Radar, AlertTriangle } from 'lucide-react';
+import { MockDataBadge } from '../mock-data-badge';
 interface AssetScannerCardProps {
-  status: "loading" | "result";
+  status: 'loading' | 'result';
   result?: {
     assets: Array<{
       chain: string;
@@ -19,20 +19,24 @@ interface AssetScannerCardProps {
   };
 }
 const chainColors: Record<string, string> = {
-  ethereum: "bg-blue-500",
-  arbitrum: "bg-indigo-500",
-  base: "bg-cyan-500",
-  optimism: "bg-red-500",
-  solana: "bg-purple-500",
+  ethereum: 'bg-blue-500',
+  arbitrum: 'bg-indigo-500',
+  base: 'bg-cyan-500',
+  optimism: 'bg-red-500',
+  solana: 'bg-purple-500',
 };
 export function AssetScannerCard({ status, result }: AssetScannerCardProps) {
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <div className="bg-slate-900 border border-blue-500/30 rounded-lg p-6 max-w-lg">
         <div className="flex items-center gap-3 mb-6">
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            transition={{
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'linear',
+            }}
           >
             <Radar className="w-6 h-6 text-blue-400" />
           </motion.div>
@@ -44,8 +48,12 @@ export function AssetScannerCard({ status, result }: AssetScannerCardProps) {
         <div className="relative h-32 bg-slate-800/50 rounded-lg overflow-hidden">
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            animate={{ x: ['-100%', '100%'] }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'linear',
+            }}
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-blue-400/50 font-mono text-xs">
@@ -58,8 +66,8 @@ export function AssetScannerCard({ status, result }: AssetScannerCardProps) {
   }
   const riskColor =
     result?.riskScore && result.riskScore > 75
-      ? "text-red-400"
-      : "text-yellow-400";
+      ? 'text-red-400'
+      : 'text-yellow-400';
   return (
     <div className="bg-slate-900 border border-blue-500/50 rounded-lg p-6 max-w-lg">
       <div className="flex items-center justify-between mb-6">
@@ -91,7 +99,7 @@ export function AssetScannerCard({ status, result }: AssetScannerCardProps) {
       <div className="space-y-2 mb-4">
         {result?.assets.map((asset, idx) => (
           <motion.div
-            key={idx}
+            key={`${asset.chain}-${asset.token}`}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.1 }}
@@ -99,7 +107,7 @@ export function AssetScannerCard({ status, result }: AssetScannerCardProps) {
           >
             <div className="flex items-center gap-3">
               <div
-                className={`w-2 h-2 rounded-full ${chainColors[asset.chain] || "bg-gray-500"}`}
+                className={`w-2 h-2 rounded-full ${chainColors[asset.chain] || 'bg-gray-500'}`}
               />
               <div>
                 <div className="text-sm font-medium text-white">

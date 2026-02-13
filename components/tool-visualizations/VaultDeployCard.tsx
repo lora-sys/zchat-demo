@@ -1,10 +1,10 @@
-"use client";
-import { motion } from "framer-motion";
-import { Box, Check, Copy, ExternalLink, Shield, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { MockDataBadge } from "../mock-data-badge";
+'use client';
+import { motion } from 'framer-motion';
+import { Box, Check, Copy, ExternalLink, Shield, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { MockDataBadge } from '../mock-data-badge';
 interface VaultDeployCardProps {
-  status: "loading" | "result";
+  status: 'loading' | 'result';
   result?: {
     contractAddress: string;
     deploymentTx: string;
@@ -16,10 +16,10 @@ interface VaultDeployCardProps {
   };
 }
 const steps = [
-  { label: "Compile", icon: Box },
-  { label: "Deploy", icon: Box },
-  { label: "Verify", icon: Shield },
-  { label: "Ready", icon: Sparkles },
+  { label: 'Compile', icon: Box },
+  { label: 'Deploy', icon: Box },
+  { label: 'Verify', icon: Shield },
+  { label: 'Ready', icon: Sparkles },
 ];
 export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
   const [copied, setCopied] = useState(false);
@@ -30,13 +30,17 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
       setTimeout(() => setCopied(false), 2000);
     }
   };
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <div className="bg-slate-900 border border-amber-500/30 rounded-lg p-6 max-w-md">
         <div className="flex items-center gap-3 mb-6">
           <motion.div
             animate={{ rotate: [0, 360] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'linear',
+            }}
           >
             <Box className="w-6 h-6 text-amber-400" />
           </motion.div>
@@ -49,21 +53,21 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
             <div key={step.label} className="flex flex-col items-center">
               <motion.div
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                  idx < 2 ? "bg-amber-500 border-amber-500" : "border-slate-700"
+                  idx < 2 ? 'bg-amber-500 border-amber-500' : 'border-slate-700'
                 }`}
                 animate={
                   idx === 2
-                    ? { borderColor: ["#f59e0b", "#374151", "#f59e0b"] }
+                    ? { borderColor: ['#f59e0b', '#374151', '#f59e0b'] }
                     : {}
                 }
-                transition={{ duration: 1.5, repeat: Infinity }}
+                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
               >
                 <step.icon
-                  className={`w-4 h-4 ${idx < 2 ? "text-white" : "text-slate-600"}`}
+                  className={`w-4 h-4 ${idx < 2 ? 'text-white' : 'text-slate-600'}`}
                 />
               </motion.div>
               <span
-                className={`text-xs mt-2 ${idx < 2 ? "text-amber-400" : "text-slate-600"}`}
+                className={`text-xs mt-2 ${idx < 2 ? 'text-amber-400' : 'text-slate-600'}`}
               >
                 {step.label}
               </span>
@@ -74,14 +78,14 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
           <div className="flex justify-between text-xs text-slate-500">
             <span>Gas Estimate:</span>
             <span className="text-amber-400">
-              {result?.gasUsed || "0.005 ETH"}
+              {result?.gasUsed || '0.005 ETH'}
             </span>
           </div>
           <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-amber-500"
-              initial={{ width: "0%" }}
-              animate={{ width: ["0%", "30%", "60%", "85%"] }}
+              initial={{ width: '0%' }}
+              animate={{ width: ['0%', '30%', '60%', '85%'] }}
               transition={{ duration: 4, times: [0, 0.3, 0.6, 0.9] }}
             />
           </div>
@@ -91,15 +95,15 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
   }
   return (
     <motion.div
-      initial={{ boxShadow: "0 0 0 rgba(245, 158, 11, 0)" }}
+      initial={{ boxShadow: '0 0 0 rgba(245, 158, 11, 0)' }}
       animate={{
         boxShadow: [
-          "0 0 20px rgba(245, 158, 11, 0.3)",
-          "0 0 40px rgba(245, 158, 11, 0.1)",
-          "0 0 20px rgba(245, 158, 11, 0.3)",
+          '0 0 20px rgba(245, 158, 11, 0.3)',
+          '0 0 40px rgba(245, 158, 11, 0.1)',
+          '0 0 20px rgba(245, 158, 11, 0.3)',
         ],
       }}
-      transition={{ duration: 2, repeat: Infinity }}
+      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
       className="bg-slate-900 border-2 border-amber-500/50 rounded-lg p-6 max-w-md"
     >
       <div className="flex items-center justify-between mb-6">
@@ -117,6 +121,7 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
         <div className="text-xs text-slate-500 mb-2 flex items-center justify-between">
           Contract Address
           <button
+            type="button"
             onClick={copyAddress}
             className="text-amber-400 hover:text-amber-300 transition-colors"
           >
@@ -149,7 +154,7 @@ export function VaultDeployCard({ status, result }: VaultDeployCardProps) {
           >
             <Check className="w-3 h-3 text-green-400" />
             <span className="text-xs text-green-300 capitalize">
-              {feature.replace("_", " ")}
+              {feature.replace('_', ' ')}
             </span>
           </div>
         ))}

@@ -27,7 +27,7 @@ export function FiatRiskCard({ status, result }: FiatRiskCardProps) {
         <div className="flex items-center gap-3 mb-4">
           <motion.div
             animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
+            transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
           >
             <Scale className="w-6 h-6 text-red-400" />
           </motion.div>
@@ -69,7 +69,7 @@ export function FiatRiskCard({ status, result }: FiatRiskCardProps) {
             }
           : {}
       }
-      transition={{ duration: 2, repeat: Infinity }}
+      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
       className={`bg-slate-900 border-2 ${isCritical ? "border-red-500" : "border-orange-500/50"} rounded-lg p-6 max-w-md`}
     >
       <div className="flex items-center justify-between mb-6">
