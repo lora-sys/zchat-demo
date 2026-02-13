@@ -16,6 +16,7 @@ import { estimateFiatRisk } from "@/lib/ai/tools/estimate-fiat-risk";
 import { deployVaultContract } from "@/lib/ai/tools/deploy-vault-contract";
 import { generateUUID, getMostRecentUserMessage } from "@/lib/utils";
 import { compressContext } from '@/lib/ai/utils/context-manager';
+import { truthOracle } from "@/lib/ai/tools/truth-oracle";
 export const maxDuration = 60;
 
 type AllowedTools =
@@ -23,7 +24,8 @@ type AllowedTools =
   | "scanChainAssets"
   | "simulateZKProof"
   | "estimateFiatRisk"
-  | "deployVaultContract";
+  | "deployVaultContract"
+  | "truthOracle";
 
   // TODO: SEARCH TOOL
 const allTools: AllowedTools[] = [
@@ -32,6 +34,7 @@ const allTools: AllowedTools[] = [
   "simulateZKProof",
   "estimateFiatRisk",
   "deployVaultContract",
+  "truthOracle",
 ];
 export async function POST(request: Request) {
   const {
@@ -76,6 +79,7 @@ export async function POST(request: Request) {
           simulateZKProof,
           estimateFiatRisk,
           deployVaultContract,
+          truthOracle,
         },
         experimental_telemetry: {
           isEnabled: true,
