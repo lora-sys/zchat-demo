@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers';
 
-import { Chat } from '@/components/chat';
+
 import { DEFAULT_MODEL_NAME, models } from '@/lib/ai/models';
 import { generateId } from 'ai';
+import { ChatWrapper } from '@/components/chat-wrapper';
 
 export default async function Page() {
   const id = generateId();
@@ -15,7 +16,7 @@ export default async function Page() {
 
   return (
     <>
-      <Chat id={id} selectedModelId={selectedModelId} />
+      <ChatWrapper id={id} selectedModelId={selectedModelId} />
     </>
   );
 }

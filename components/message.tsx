@@ -13,7 +13,12 @@ import { MessageActions } from './message-actions';
 import { MessageEditor } from './message-editor';
 import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { Weather } from './weather';
+
+import { AAgentCard } from './tool-visualizations/AAgentCard';
+import { AssetScannerCard } from './tool-visualizations/AssetScannerCard';
+import { ZKProofCard } from './tool-visualizations/ZKProofCard';
+import { FiatRiskCard } from './tool-visualizations/FiatRiskCard';
+import { VaultDeployCard } from './tool-visualizations/VaultDeployCard';
 
 const PurePreviewMessage = ({
   chatId,
@@ -107,29 +112,49 @@ const PurePreviewMessage = ({
             {message.toolInvocations && message.toolInvocations.length > 0 && (
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
-                  const { toolName, toolCallId, state, args } = toolInvocation;
+                  const { toolName, toolCallId, state } = toolInvocation;
 
                   if (state === 'result') {
                     const { result } = toolInvocation;
 
                     return (
                       <div key={toolCallId}>
-                        {toolName === 'getWeather' ? (
-                          <Weather weatherAtLocation={result} />
-                        ) : (
-                          <pre>{JSON.stringify(result, null, 2)}</pre>
+                        {toolName === 'callAAAgent' && (
+                          <AAgentCard status="result" result={result} />
+                        )}
+                        {toolName === 'scanChainAssets' && (
+                          <AssetScannerCard status="result" result={result} />
+                        )}
+                        {toolName === 'simulateZKProof' && (
+                          <ZKProofCard status="result" result={result} />
+                        )}
+                        {toolName === 'estimateFiatRisk' && (
+                          <FiatRiskCard status="result" result={result} />
+                        )}
+                        {toolName === 'deployVaultContract' && (
+                          <VaultDeployCard status="result" result={result} />
                         )}
                       </div>
                     );
                   }
+
                   return (
-                    <div
-                      key={toolCallId}
-                      className={cx({
-                        skeleton: ['getWeather'].includes(toolName),
-                      })}
-                    >
-                      {toolName === 'getWeather' ? <Weather /> : null}
+                    <div key={toolCallId}>
+                      {toolName === 'callAAAgent' && (
+                        <AAgentCard status="loading" />
+                      )}
+                      {toolName === 'scanChainAssets' && (
+                        <AssetScannerCard status="loading" />
+                      )}
+                      {toolName === 'simulateZKProof' && (
+                        <ZKProofCard status="loading" />
+                      )}
+                      {toolName === 'estimateFiatRisk' && (
+                        <FiatRiskCard status="loading" />
+                      )}
+                      {toolName === 'deployVaultContract' && (
+                        <VaultDeployCard status="loading" />
+                      )}
                     </div>
                   );
                 })}

@@ -31,20 +31,34 @@ function PureMessages({
   return (
     <div
       ref={messagesContainerRef}
-      className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
+      className="flex flex-col min-w-0 gap-4 flex-1 min-h-0 overflow-y-auto pt-4 scroll-smooth relative h-full"
+      style={{
+        overscrollBehavior: 'contain',
+        WebkitOverflowScrolling: 'touch',
+      }}
     >
-      {messages.length === 0 && <Overview />}
-
-      {messages.map((message, index) => (
-        <PreviewMessage
-          key={message.id}
-          chatId={chatId}
-          message={message}
-          isLoading={isLoading && messages.length - 1 === index}
-          setMessages={setMessages}
-          reload={reload}
-        />
-      ))}
+      {messages.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <Overview />
+        </div>
+      ) : (
+        <>
+          {messages.map((message, index) => (
+            <PreviewMessage
+              key={message.id}
+              chatId={chatId}
+              message={message}
+              isLoading={
+                isLoading &&
+                message.role === 'assistant' &&
+                index === messages.length - 1
+              }
+              setMessages={setMessages}
+              reload={reload}
+            />
+          ))}
+        </>
+      )}
 
       {isLoading &&
         messages.length > 0 &&

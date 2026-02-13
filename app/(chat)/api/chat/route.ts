@@ -4,21 +4,35 @@ import {
   createDataStreamResponse,
   smoothStream,
   streamText,
-} from 'ai';
+} from "ai";
 
-import { customModel } from '@/lib/ai';
-import { models } from '@/lib/ai/models';
-import { regularPrompt } from '@/lib/ai/prompts';
-import { getWeather } from '@/lib/ai/tools/get-weather';
-import { generateUUID, getMostRecentUserMessage } from '@/lib/utils';
-
+import { customModel } from "@/lib/ai";
+import { models } from "@/lib/ai/models";
+import { regularPrompt } from "@/lib/ai/prompts";
+import { callAAAgent } from "@/lib/ai/tools/call-aa-agent";
+import { scanChainAssets } from "@/lib/ai/tools/scan-chain-assets";
+import { simulateZKProof } from "@/lib/ai/tools/simulate-zk-proof";
+import { estimateFiatRisk } from "@/lib/ai/tools/estimate-fiat-risk";
+import { deployVaultContract } from "@/lib/ai/tools/deploy-vault-contract";
+import { generateUUID, getMostRecentUserMessage } from "@/lib/utils";
+import { compressContext } from '@/lib/ai/utils/context-manager';
 export const maxDuration = 60;
 
-type AllowedTools = 'getWeather';
+type AllowedTools =
+  | "callAAAgent"
+  | "scanChainAssets"
+  | "simulateZKProof"
+  | "estimateFiatRisk"
+  | "deployVaultContract";
 
-const weatherTools: AllowedTools[] = ['getWeather'];
-const allTools: AllowedTools[] = [...weatherTools];
-
+  // TODO: SEARCH TOOL
+const allTools: AllowedTools[] = [
+  "callAAAgent",
+  "scanChainAssets",
+  "simulateZKProof",
+  "estimateFiatRisk",
+  "deployVaultContract",
+];
 export async function POST(request: Request) {
   const {
     id,
@@ -30,14 +44,14 @@ export async function POST(request: Request) {
   const model = models.find((model) => model.id === modelId);
 
   if (!model) {
-    return new Response('Model not found', { status: 404 });
+    return new Response("Model not found", { status: 404 });
   }
 
-  const coreMessages = convertToCoreMessages(messages);
+  const coreMessages = convertToCoreMessages(compressContext(messages));
   const userMessage = getMostRecentUserMessage(coreMessages);
 
   if (!userMessage) {
-    return new Response('No user message found', { status: 400 });
+    return new Response("No user message found", { status: 400 });
   }
 
   const userMessageId = generateUUID();
@@ -45,7 +59,7 @@ export async function POST(request: Request) {
   return createDataStreamResponse({
     execute: (dataStream) => {
       dataStream.writeData({
-        type: 'user-message-id',
+        type: "user-message-id",
         content: userMessageId,
       });
 
@@ -55,13 +69,17 @@ export async function POST(request: Request) {
         messages: coreMessages,
         maxSteps: 5,
         experimental_activeTools: allTools,
-        experimental_transform: smoothStream({ chunking: 'word' }),
+        experimental_transform: smoothStream({ chunking: "word" }),
         tools: {
-          getWeather,
+          callAAAgent,
+          scanChainAssets,
+          simulateZKProof,
+          estimateFiatRisk,
+          deployVaultContract,
         },
         experimental_telemetry: {
           isEnabled: true,
-          functionId: 'stream-text',
+          functionId: "stream-text",
         },
       });
 
