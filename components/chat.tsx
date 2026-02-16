@@ -30,7 +30,6 @@ export const Chat = forwardRef<
   } = useChat({
     id,
     body: { id, modelId: selectedModelId },
-    experimental_throttle: 100,
   });
 
   // 暴露 sendMessage 方法给父组件调用

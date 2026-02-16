@@ -1,50 +1,17 @@
 import Link from 'next/link';
 import { memo } from 'react';
-import ReactMarkdown, { type Components } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { CodeBlock } from './code-block';
+import { Streamdown, type Components } from 'streamdown';
+import { code } from '@streamdown/code';
+import { mermaid } from '@streamdown/mermaid';
+import { math } from '@streamdown/math';
+import { cjk } from '@streamdown/cjk';
+import 'katex/dist/katex.min.css';
 
 const components: Components = {
-  code: ({ node, className, children, ...props }) => {
-    return (
-      <CodeBlock {...props} inline={false}>
-        {children}
-      </CodeBlock>
-    );
-  },
-  pre: ({ children }) => <>{children}</>,
-  ol: ({ node, children, ...props }) => {
-    return (
-      <ol className="list-decimal list-outside ml-4" {...props}>
-        {children}
-      </ol>
-    );
-  },
-  li: ({ node, children, ...props }) => {
-    return (
-      <li className="py-1" {...props}>
-        {children}
-      </li>
-    );
-  },
-  ul: ({ node, children, ...props }) => {
-    return (
-      <ul className="list-decimal list-outside ml-4" {...props}>
-        {children}
-      </ul>
-    );
-  },
-  strong: ({ node, children, ...props }) => {
-    return (
-      <span className="font-semibold" {...props}>
-        {children}
-      </span>
-    );
-  },
-  a: ({ node, children, href, ...props }) => {
+  a: ({ children, href, ...props }) => {
     return (
       <Link
-        className="text-blue-500 hover:underline"
+        className="text-primary hover:underline"
         target="_blank"
         rel="noreferrer"
         href={href ?? '#'}
@@ -54,57 +21,13 @@ const components: Components = {
       </Link>
     );
   },
-  h1: ({ node, children, ...props }) => {
-    return (
-      <h1 className="text-3xl font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h1>
-    );
-  },
-  h2: ({ node, children, ...props }) => {
-    return (
-      <h2 className="text-2xl font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h2>
-    );
-  },
-  h3: ({ node, children, ...props }) => {
-    return (
-      <h3 className="text-xl font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h3>
-    );
-  },
-  h4: ({ node, children, ...props }) => {
-    return (
-      <h4 className="text-lg font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h4>
-    );
-  },
-  h5: ({ node, children, ...props }) => {
-    return (
-      <h5 className="text-base font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h5>
-    );
-  },
-  h6: ({ node, children, ...props }) => {
-    return (
-      <h6 className="text-sm font-semibold mt-6 mb-2" {...props}>
-        {children}
-      </h6>
-    );
-  },
 };
-
-const remarkPlugins = [remarkGfm];
 
 const NonMemoizedMarkdown = ({ children }: { children: string }) => {
   return (
-    <ReactMarkdown remarkPlugins={remarkPlugins} components={components}>
+    <Streamdown plugins={{ code, mermaid, math, cjk }} components={components}>
       {children}
-    </ReactMarkdown>
+    </Streamdown>
   );
 };
 
