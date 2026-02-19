@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EdgeBridge - The Decentralized Bridge to Future Finance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00FFB3;
+            --secondary: #00D9FF;
+            --dark: #0B0D17;
+            --darker: #060710;
+            --surface: #151824;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --text-muted: #718096;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-wrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 179, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.03) 0%, transparent 50%);
+        }
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(11, 13, 23, 0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease;
+        }
+        nav.scrolled { background: rgba(11, 13, 23, 0.95); border-bottom-color: rgba(255, 255, 255, 0.1); }
+        .nav-container {
+            max-width: 1400px; margin: 0 auto; padding: 24px 48px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
+            color: var(--text-primary); letter-spacing: -0.5px; cursor: pointer; transition: color 0.3s ease;
+        }
+        .logo:hover { color: var(--primary); }
+        .nav-center { display: flex; align-items: center; gap: 48px; }
+        .nav-links { display: flex; gap: 48px; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            font-size: 15px; transition: color 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-right { display: flex; align-items: center; gap: 24px; }
+        .lang-switcher {
+            display: flex; align-items: center; gap: 4px; padding: 8px 12px;
+            background: var(--surface); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .lang-option {
+            padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer; transition: all 0.3s ease;
+        }
+        .lang-option.active { background: var(--primary); color: var(--dark); }
+        .btn-nav {
+            padding: 12px 24px; background: var(--primary); border: none; border-radius: 8px;
+            font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; color: var(--dark);
+        }
+        .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 255, 179, 0.3); }
+        .hero {
+            position: relative; min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; text-align: center; padding: 0 48px; z-index: 1;
+        }
+        .hero-content { max-width: 1000px; animation: fadeInUp 1s ease-out; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px;
+            background: rgba(0, 255, 179, 0.1); border: 1px solid rgba(0, 255, 179, 0.2);
+            border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 32px; color: var(--primary);
+        }
+        .hero h1 {
+            font-family: 'Syne', sans-serif; font-size: 80px; font-weight: 800;
+            line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-description {
+            font-size: 22px; color: var(--text-secondary); max-width: 800px;
+            margin: 0 auto 48px; line-height: 1.7;
+        }
+        .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 18px 36px; font-size: 16px; font-weight: 600; border: none;
+            border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-primary { background: var(--primary); color: var(--dark); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 255, 179, 0.3); }
+        .btn-secondary {
+            background: transparent; color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-secondary:hover { background: var(--surface); border-color: rgba(255, 255, 255, 0.2); }
+        .stats-section {
+            position: relative; z-index: 1; padding: 80px 48px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .stats-container {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 48px;
+        }
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-family: 'Syne', sans-serif; font-size: 56px; font-weight: 800;
+            color: var(--primary); margin-bottom: 8px; letter-spacing: -1px;
+        }
+        .stat-label { font-size: 15px; color: var(--text-secondary); }
+        .features-section { position: relative; z-index: 1; padding: 120px 48px; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 80px; }
+        .section-tag {
+            display: inline-block; padding: 6px 16px; background: rgba(0, 255, 179, 0.1);
+            border: 1px solid rgba(0, 255, 179, 0.2); border-radius: 100px; font-size: 12px;
+            font-weight: 600; margin-bottom: 24px; color: var(--primary);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+            margin-bottom: 16px; letter-spacing: -1px;
+        }
+        .section-description { font-size: 18px; color: var(--text-secondary); line-height: 1.7; }
+        .features-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px;
+        }
+        .feature-card {
+            display: block;
+            background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 40px; transition: all 0.3s ease;
+        }
+        .feature-card-link { text-decoration: none; color: inherit; display: block; }
+        .feature-card-link:hover .feature-card { border-color: rgba(0, 255, 179, 0.3); transform: translateY(-4px); }
+        .feature-icon {
+            width: 56px; height: 56px; margin-bottom: 24px; background: rgba(0, 255, 179, 0.1);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px;
+        }
+        .feature-title {
+            font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 12px;
+        }
+        .feature-description { color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+        .feature-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            padding: 6px 12px; background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px; font-size: 12px; color: var(--text-muted);
+        }
+        .tokenomics-section { position: relative; z-index: 1; padding: 120px 48px; background: var(--darker); }
+        .architecture-section { 
+            position: relative; z-index: 1; padding: 120px 48px; 
+            background: linear-gradient(180deg, var(--dark) 0%, var(--darker) 100%);
+        }
+        .architecture-table-container {
+            max-width: 1200px; margin: 60px auto;
+        }
+        .table-wrapper-home {
+            overflow-x: auto; 
+            background: var(--surface); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; 
+            padding: 0;
+        }
+        .architecture-table {
+            width: 100%; border-collapse: collapse;
+        }
+        .architecture-table th, 
+        .architecture-table td {
+            padding: 20px 24px; text-align: left; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .architecture-table thead tr {
+            background: rgba(0, 255, 179, 0.05);
+        }
+        .architecture-table th {
+            color: var(--primary); font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 15px; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .architecture-table td {
+            color: var(--text-secondary); font-size: 14px; line-height: 1.7;
+        }
+        .architecture-table td:first-child {
+            color: var(--text-primary); font-weight: 600; font-size: 15px;
+            white-space: nowrap; min-width: 150px;
+        }
+        .architecture-table tbody tr {
+            transition: background 0.3s ease;
+        }
+        .architecture-table tbody tr:hover {
+            background: rgba(0, 255, 179, 0.02);
+        }
+        .architecture-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .tokenomics-container {
+            max-width: 900px; margin: 60px auto;
+        }
+        .token-distribution-full {
+            background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 48px;
+        }
+        .token-distribution-full h3 { 
+            font-family: 'Syne', sans-serif; font-size: 28px; margin-bottom: 40px; 
+            text-align: center; color: var(--text-primary);
+        }
+        .distribution-item { margin-bottom: 32px; }
+        .distribution-item:last-child { margin-bottom: 0; }
+        .distribution-header { margin-bottom: 8px; }
+        .distribution-label { 
+            display: flex; justify-content: space-between; 
+            font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;
+        }
+        .distribution-bar {
+            height: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; overflow: hidden;
+        }
+        .distribution-fill {
+            height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px; transition: width 1s ease;
+        }
+        .distribution-desc {
+            font-size: 13px; color: var(--text-muted); margin-top: 8px; 
+            padding-left: 16px; border-left: 2px solid rgba(0, 255, 179, 0.3);
+            line-height: 1.6;
+        }
+        .roadmap-section { position: relative; z-index: 1; padding: 120px 48px; }
+        .roadmap-timeline { max-width: 1400px; margin: 60px auto; position: relative; }
+        .roadmap-phase {
+            display: grid; grid-template-columns: 200px 1fr; gap: 48px; margin-bottom: 80px; position: relative;
+        }
+        .phase-header { text-align: right; padding-right: 48px; border-right: 3px solid var(--primary); }
+        .phase-number {
+            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+            color: var(--primary); line-height: 1; margin-bottom: 8px;
+        }
+        .phase-date { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .phase-content {
+            background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 40px; transition: all 0.3s ease;
+        }
+        .phase-content:hover { border-color: var(--primary); transform: translateX(8px); }
+        .phase-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 16px; }
+        .phase-description { color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7; }
+        .milestones {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;
+        }
+        .milestone {
+            padding: 16px; background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px; border-left: 3px solid var(--primary);
+        }
+        .milestone-title { font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        .milestone-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .cta-section { position: relative; z-index: 1; padding: 120px 48px; text-align: center; }
+        .cta-content {
+            max-width: 800px; margin: 0 auto; padding: 80px 60px;
+            background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px;
+        }
+        .cta-title {
+            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+            margin-bottom: 24px; letter-spacing: -1px;
+        }
+        .cta-desc { font-size: 18px; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.7; }
+        footer {
+            position: relative; z-index: 1; background: var(--darker); padding: 80px 48px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .footer-container {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px;
+        }
+        .footer-section h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 12px; }
+        .footer-section a {
+            color: var(--text-muted); text-decoration: none; transition: color 0.3s ease; font-size: 14px;
+        }
+        .footer-section a:hover { color: var(--text-primary); }
+        .social-links { display: flex; gap: 12px; margin-top: 24px; }
+        .social-icon {
+            width: 40px; height: 40px; background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; font-size: 18px;
+        }
+        .social-icon:hover { background: var(--primary); color: var(--dark); border-color: var(--primary); }
+        .footer-bottom {
+            text-align: center; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted); font-size: 14px;
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 56px; }
+            .roadmap-phase { grid-template-columns: 1fr; }
+            .phase-header {
+                text-align: left; border-right: none; border-bottom: 3px solid var(--primary);
+                padding-right: 0; padding-bottom: 16px;
+            }
+            .footer-container { grid-template-columns: 1fr 1fr; gap: 40px; }
+        }
+        @media (max-width: 768px) {
+            .nav-container { padding: 20px 24px; }
+            .hero { padding: 0 24px; }
+            .hero h1 { font-size: 42px; }
+            .hero-description { font-size: 18px; }
+            .section-title { font-size: 36px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .stats-section, .features-section, .tokenomics-section, .architecture-section, .roadmap-section, .cta-section {
+                padding: 80px 24px;
+            }
+            footer { padding: 60px 24px 40px; }
+            .footer-container { grid-template-columns: 1fr; gap: 40px; }
+            .cta-content { padding: 60px 32px; }
+            .news-ticker { top: 60px; }
+        }
+        
+        /* 热讯Ticker样式 */
+        .news-ticker {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 13, 23, 0.95);
+            border-bottom: 1px solid var(--primary);
+            padding: 10px 0;
+            z-index: 999;
+            overflow: hidden;
+        }
+        .news-ticker-track {
+            display: flex;
+            width: max-content;
+            animation: newsScroll 40s linear infinite;
+        }
+        .news-ticker-track:hover {
+            animation-play-state: paused;
+        }
+        .news-item {
+            flex-shrink: 0;
+            padding: 0 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .news-item:hover {
+            color: var(--primary);
+        }
+        .news-category {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: rgba(0, 255, 179, 0.15);
+            border: 1px solid rgba(0, 255, 179, 0.3);
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .news-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .news-summary {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .news-divider {
+            color: var(--text-muted);
+            font-size: 20px;
+            opacity: 0.5;
+        }
+        @keyframes newsScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .news-label {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 1000;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-wrapper"></div>
+    <div class="grain"></div>
+    
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="navigateWithLang('index.html')">EdgeBridge</div>
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="#features"><span data-lang="nav-features">Core Features</span></a></li>
+                    <li><a href="#architecture"><span data-lang="nav-architecture">Architecture</span></a></li>
+                    <li><a href="#tokenomics"><span data-lang="nav-tokenomics">Tokenomics</span></a></li>
+                    <li><a href="#roadmap"><span data-lang="nav-roadmap">Roadmap</span></a></li>
+                    <li><a href="litepaper.html" onclick="event.preventDefault(); navigateWithLang('litepaper.html');"><span data-lang="nav-litepaper">Litepaper</span></a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <div class="lang-switcher">
+                    <div class="lang-option active" onclick="switchLanguage('en')">EN</div>
+                    <div class="lang-option" onclick="switchLanguage('zh')">中文</div>
+                </div>
+                <button class="btn-nav" data-lang="cta-launch">Launch App</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 热讯Ticker -->
+    <div class="news-label">🔥 热讯</div>
+    <div class="news-ticker" id="newsTicker">
+        <div class="news-ticker-track" id="newsTrack"></div>
+    </div>
+    
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><span data-lang="hero-badge">Next-Generation DeFi Infrastructure</span></div>
+            <h1>
+                <span data-lang="hero-title-1">The Decentralized Bridge</span><br/>
+                <span class="gradient-text" data-lang="hero-title-2">to Future Finance</span>
+            </h1>
+            <p class="hero-description" data-lang="hero-description">
+                Empowering Gen Z with AI education, autonomous agents, prediction markets, 
+                embodied robotics, and zero-knowledge encryption for true financial freedom
+            </p>
+            <div class="hero-cta">
+                <button class="btn btn-primary" data-lang="btn-explore">Start Exploring</button>
+                <a href="litepaper.html" class="btn btn-secondary" data-lang="btn-litepaper" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Read Litepaper</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item"><div class="stat-number">5</div><div class="stat-label" data-lang="stat-pillars">Core Technology Pillars</div></div>
+            <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label" data-lang="stat-ai">AI Autonomous Trading</div></div>
+            <div class="stat-item"><div class="stat-number">10B</div><div class="stat-label" data-lang="stat-supply">$EDGE Total Supply</div></div>
+            <div class="stat-item"><div class="stat-number">∞</div><div class="stat-label" data-lang="stat-potential">Decentralized Potential</div></div>
+        </div>
+    </section>
+    
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <span class="section-tag" data-lang="features-tag">Core Features</span>
+            <h2 class="section-title" data-lang="features-title">Five Pillars of Financial Freedom</h2>
+            <p class="section-description" data-lang="features-desc">
+                Comprehensive ecosystem spanning education, intelligence, data, embodiment, and security
+            </p>
+        </div>
+        <div class="features-grid">
+            <a href="https://zchat-demo.vercel.app/" target="_blank" rel="noopener noreferrer" class="feature-card-link">
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3 class="feature-title" data-lang="feature1-title">ZChat - AI Financial Education</h3>
+                <p class="feature-description" data-lang="feature1-desc">
+                    Conversational AI tutor designed for digital natives in the AI-crypto era. 
+                    Personalized learning paths from traditional finance to DeFi, RWA, and AI investment strategies.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag1-1">Personalized Paths</span>
+                    <span class="tag" data-lang="tag1-2">Real-time Analysis</span>
+                    <span class="tag" data-lang="tag1-3">Trading Sandbox</span>
+                </div>
+            </div>
+            </a>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title" data-lang="feature2-title">AA - Autonomous Financial Agent</h3>
+                <p class="feature-description" data-lang="feature2-desc">
+                    Personal AI Agent built on X402 & ERC-8004 protocols. Autonomous 24/7 market monitoring, 
+                    portfolio optimization, micro-quantitative trading, and CA creation based on market trends.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag2-1">Auto Trading</span>
+                    <span class="tag" data-lang="tag2-2">Risk Management</span>
+                    <span class="tag" data-lang="tag2-3">CA Creation</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title" data-lang="feature3-title">Prediction Market Hub</h3>
+                <p class="feature-description" data-lang="feature3-desc">
+                    Financial intelligence aggregation layer powered by "skin in the game" mechanisms. 
+                    Aggregates Polymarket, Augur, and Gnosis for validated market insights and RWA integration.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag3-1">Multi-platform Aggregation</span>
+                    <span class="tag" data-lang="tag3-2">AI Training</span>
+                    <span class="tag" data-lang="tag3-3">RWA Integration</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🦾</div>
+                <h3 class="feature-title" data-lang="feature4-title">Robotic - Embodied Intelligence</h3>
+                <p class="feature-description" data-lang="feature4-desc">
+                    Physical AI companion with your AA projection. Voice interaction, offline signing, 
+                    AR/VR integration, and DePIN rewards for data contribution.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag4-1">Voice & AR/VR</span>
+                    <span class="tag" data-lang="tag4-2">Offline Security</span>
+                    <span class="tag" data-lang="tag4-3">DePIN Mining</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title" data-lang="feature5-title">Privacy & Security</h3>
+                <p class="feature-description" data-lang="feature5-desc">
+                    ZK-SNARKs for private transactions, fully homomorphic encryption for secure computation, 
+                    quantum-resistant algorithms, and multi-layer security protocols.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag5-1">ZK-SNARKs</span>
+                    <span class="tag" data-lang="tag5-2">FHE Computing</span>
+                    <span class="tag" data-lang="tag5-3">Quantum-Safe</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title" data-lang="feature6-title">$EDGE Token Economy</h3>
+                <p class="feature-description" data-lang="feature6-desc">
+                    Governance, staking rewards, and feature unlocking in one. Deflationary model 
+                    through transaction fee buybacks and prediction market burns.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag" data-lang="tag6-1">Governance</span>
+                    <span class="tag" data-lang="tag6-2">Staking Rewards</span>
+                    <span class="tag" data-lang="tag6-3">Deflationary</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="architecture-section" id="architecture">
+        <div class="section-header">
+            <span class="section-tag" data-lang="architecture-tag">Architecture</span>
+            <h2 class="section-title" data-lang="architecture-home-title">Four-Layer Technical Architecture</h2>
+            <p class="section-description" data-lang="architecture-home-desc">
+                Modular design ensuring scalability, security, and seamless integration
+            </p>
+        </div>
+        <div class="architecture-table-container">
+            <div class="table-wrapper-home">
+                <table class="architecture-table">
+                    <thead>
+                        <tr>
+                            <th data-lang="table-layer">Layer</th>
+                            <th data-lang="table-description">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-lang="framework-layer1">Application Layer</td>
+                            <td data-lang="framework-layer1-desc">ZChat education interface, AA operation panel, prediction market UI - user interaction frontend providing intuitive interface support</td>
+                        </tr>
+                        <tr>
+                            <td data-lang="framework-layer2">Protocol Layer</td>
+                            <td data-lang="framework-layer2-desc">X402 communication protocol, ERC-8004 Agent standard, MCP A2A - core communication and standard layer ensuring interoperability</td>
+                        </tr>
+                        <tr>
+                            <td data-lang="framework-layer3">Settlement Layer</td>
+                            <td data-lang="framework-layer3-desc">Multi-chain support (Base/Arbitrum/Polygon/Solana) - supporting cross-chain asset transfers and efficient transaction execution</td>
+                        </tr>
+                        <tr>
+                            <td data-lang="framework-layer4">Security Layer</td>
+                            <td data-lang="framework-layer4-desc">zk-SNARKs, fully homomorphic encryption, distributed key management - underlying encryption protection ensuring user privacy and fund security</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    
+    <section class="tokenomics-section" id="tokenomics">
+        <div class="section-header">
+            <span class="section-tag" data-lang="tokenomics-tag">Tokenomics</span>
+            <h2 class="section-title" data-lang="tokenomics-title">$EDGE Token Economics</h2>
+            <p class="section-description" data-lang="tokenomics-desc">
+                Total supply of 10 billion tokens with strategic distribution and linear vesting
+            </p>
+        </div>
+        <div class="tokenomics-container">
+            <div class="token-distribution-full">
+                <h3 data-lang="distribution-title">Token Distribution</h3>
+                <div class="distribution-item">
+                    <div class="distribution-header">
+                        <div class="distribution-label"><span data-lang="dist-community">Community Incentives</span><span>45%</span></div>
+                    </div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: 45%"></div></div>
+                    <p class="distribution-desc" data-lang="dist-community-desc">Liquidity mining, early user airdrops, ecosystem contribution rewards</p>
+                </div>
+                <div class="distribution-item">
+                    <div class="distribution-header">
+                        <div class="distribution-label"><span data-lang="dist-ecosystem">Ecosystem Development</span><span>25%</span></div>
+                    </div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: 25%"></div></div>
+                    <p class="distribution-desc" data-lang="dist-ecosystem-desc">Partner signing, developer grants, technology R&D investment</p>
+                </div>
+                <div class="distribution-item">
+                    <div class="distribution-header">
+                        <div class="distribution-label"><span data-lang="dist-team">Team & Advisors</span><span>15%</span></div>
+                    </div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: 15%"></div></div>
+                    <p class="distribution-desc" data-lang="dist-team-desc">4-year linear unlock, binding team long-term interests</p>
+                </div>
+                <div class="distribution-item">
+                    <div class="distribution-header">
+                        <div class="distribution-label"><span data-lang="dist-public">Public Sale</span><span>12.5%</span></div>
+                    </div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: 12.5%"></div></div>
+                    <p class="distribution-desc" data-lang="dist-public-desc">Market promotion, user growth and ecosystem implementation</p>
+                </div>
+                <div class="distribution-item">
+                    <div class="distribution-header">
+                        <div class="distribution-label"><span data-lang="dist-private">Private & Angel</span><span>2.5%</span></div>
+                    </div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: 2.5%"></div></div>
+                    <p class="distribution-desc" data-lang="dist-private-desc">Early strategic angel investment share</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="roadmap-section" id="roadmap">
+        <div class="section-header">
+            <span class="section-tag" data-lang="roadmap-tag">Roadmap</span>
+            <h2 class="section-title" data-lang="roadmap-title">From Vision to Reality</h2>
+            <p class="section-description" data-lang="roadmap-desc">Five-phase strategic development plan for 2026 and beyond</p>
+        </div>
+        <div class="roadmap-timeline">
+            <div class="roadmap-phase">
+                <div class="phase-header"><div class="phase-number">01</div><div class="phase-date">2026 Q1-Q2</div></div>
+                <div class="phase-content">
+                    <h3 class="phase-title" data-lang="phase1-title">Foundation Building</h3>
+                    <p class="phase-description" data-lang="phase1-desc">Launch core education and agent infrastructure with protocol integration</p>
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone1-1">ZChat Launch</div>
+                            <div class="milestone-desc" data-lang="milestone1-1-desc">AI financial education module with personalized learning paths</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone1-2">Protocol Integration</div>
+                            <div class="milestone-desc" data-lang="milestone1-2-desc">Implement X402 and ERC-8004 protocols for AA functionality</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone1-3">Prediction Market Test</div>
+                            <div class="milestone-desc" data-lang="milestone1-3-desc">Beta testing of prediction market API aggregation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="roadmap-phase">
+                <div class="phase-header"><div class="phase-number">02</div><div class="phase-date">2026 Q2</div></div>
+                <div class="phase-content">
+                    <h3 class="phase-title" data-lang="phase2-title">Ecosystem Integration</h3>
+                    <p class="phase-description" data-lang="phase2-desc">Full prediction market deployment and multi-chain settlement support</p>
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone2-1">Market Integration</div>
+                            <div class="milestone-desc" data-lang="milestone2-1-desc">Complete integration of Polymarket, Augur, Gnosis platforms</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone2-2">Multi-chain Support</div>
+                            <div class="milestone-desc" data-lang="milestone2-2-desc">Launch settlement on Base, Arbitrum, Polygon, Solana</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone2-3">RWA Tokenization</div>
+                            <div class="milestone-desc" data-lang="milestone2-3-desc">Introduce real-world asset tokenization capabilities</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="roadmap-phase">
+                <div class="phase-header"><div class="phase-number">03</div><div class="phase-date">2026 Q3</div></div>
+                <div class="phase-content">
+                    <h3 class="phase-title" data-lang="phase3-title">Security & Embodiment</h3>
+                    <p class="phase-description" data-lang="phase3-desc">Deploy advanced encryption and launch physical robot companions</p>
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone3-1">Privacy Layer</div>
+                            <div class="milestone-desc" data-lang="milestone3-1-desc">Implement ZK-SNARKs and fully homomorphic encryption</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone3-2">Robotic Beta</div>
+                            <div class="milestone-desc" data-lang="milestone3-2-desc">Launch first batch of embodied AI robot companions</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone3-3">Community Testing</div>
+                            <div class="milestone-desc" data-lang="milestone3-3-desc">Beta program with early adopters for optimization</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="roadmap-phase">
+                <div class="phase-header"><div class="phase-number">04</div><div class="phase-date">2026 Q3-Q4</div></div>
+                <div class="phase-content">
+                    <h3 class="phase-title" data-lang="phase4-title">Global Expansion</h3>
+                    <p class="phase-description" data-lang="phase4-desc">Mainnet launch with global fintech partnerships and token economy activation</p>
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone4-1">Mainnet Launch</div>
+                            <div class="milestone-desc" data-lang="milestone4-1-desc">Official mainnet deployment with full feature set</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone4-2">Partner Onboarding</div>
+                            <div class="milestone-desc" data-lang="milestone4-2-desc">Strategic partnerships with global fintech companies</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone4-3">Token Launch</div>
+                            <div class="milestone-desc" data-lang="milestone4-3-desc">$EDGE token generation event and airdrop campaigns</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="roadmap-phase">
+                <div class="phase-header"><div class="phase-number">05</div><div class="phase-date">2026+</div></div>
+                <div class="phase-content">
+                    <h3 class="phase-title" data-lang="phase5-title">Continuous Innovation</h3>
+                    <p class="phase-description" data-lang="phase5-desc">Iterative upgrades, DAO governance, and Web3-AI fusion exploration</p>
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone5-1">Feature Iteration</div>
+                            <div class="milestone-desc" data-lang="milestone5-1-desc">Continuous improvement based on community feedback</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone5-2">DAO Governance</div>
+                            <div class="milestone-desc" data-lang="milestone5-2-desc">Transition to full decentralized community governance</div>
+                        </div>
+                        <div class="milestone">
+                            <div class="milestone-title" data-lang="milestone5-3">Web3-AI Innovation</div>
+                            <div class="milestone-desc" data-lang="milestone5-3-desc">Explore cutting-edge integrations of Web3 and AI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2 class="cta-title"><span data-lang="cta-title">Ready to Shape Your Financial Future?</span></h2>
+            <p class="cta-desc" data-lang="cta-text">
+                Join the EdgeBridge community and explore decentralized finance with AI-powered tools. 
+                Early participants receive exclusive $EDGE token airdrops and governance rights.
+            </p>
+            <div class="hero-cta">
+                <button class="btn btn-primary" data-lang="cta-btn1">Join Waitlist</button>
+                <a href="litepaper.html" class="btn btn-secondary" data-lang="cta-btn2" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Read Litepaper</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>EdgeBridge</h3>
+                <p style="color: var(--text-secondary); line-height: 1.7; margin-top: 12px;" data-lang="footer-desc">
+                    The decentralized bridge connecting future finance, building true financial freedom for Gen Z.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">𝕏</a>
+                    <a href="#" class="social-icon">D</a>
+                    <a href="#" class="social-icon">T</a>
+                    <a href="#" class="social-icon">G</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 data-lang="footer-product">Products</h3>
+                <ul>
+                    <li><a href="#" data-lang="footer-zchat">ZChat Education</a></li>
+                    <li><a href="#" data-lang="footer-aa">AI Agent</a></li>
+                    <li><a href="#" data-lang="footer-prediction">Prediction Market</a></li>
+                    <li><a href="#" data-lang="footer-robotic">Robotic</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 data-lang="footer-resources">Resources</h3>
+                <ul>
+                    <li><a href="litepaper.html" data-lang="footer-litepaper" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Litepaper</a></li>
+                    <li><a href="#" data-lang="footer-docs">Documentation</a></li>
+                    <li><a href="#" data-lang="footer-api">Developer API</a></li>
+                    <li><a href="#" data-lang="footer-brand">Brand Assets</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 data-lang="footer-community">Community</h3>
+                <ul>
+                    <li><a href="#" data-lang="footer-twitter">Twitter</a></li>
+                    <li><a href="#" data-lang="footer-discord">Discord</a></li>
+                    <li><a href="#" data-lang="footer-telegram">Telegram</a></li>
+                    <li><a href="#" data-lang="footer-github">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span data-lang="footer-copyright">© 2025 EdgeBridge. All rights reserved.</span> · 
+            <a href="#" style="color: var(--text-muted); text-decoration: none;" data-lang="footer-privacy">Privacy</a> · 
+            <a href="#" style="color: var(--text-muted); text-decoration: none;" data-lang="footer-terms">Terms</a>
+        </div>
+    </footer>
+    
+    <script src="translations.js"></script>
+    <script src="news.js"></script>
+    <script>
+        let currentLang = 'en';
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    target && target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.distribution-fill').forEach(fill => {
+                        fill.style.transition = 'width 1s ease';
+                    });
+                }
+            });
+        }, { threshold: 0.5, rootMargin: '0px 0px -100px 0px' });
+        const tokenSection = document.querySelector('.token-distribution');
+        tokenSection && observer.observe(tokenSection);
+        
+        // 热讯Ticker渲染
+        function renderNewsTicker() {
+            const track = document.getElementById('newsTrack');
+            if (!track || !window.newsItems) return;
+            
+            // 重复两次实现无缝滚动
+            const duplicatedItems = [...window.newsItems, ...window.newsItems];
+            track.innerHTML = duplicatedItems.map((item, index) => `
+                <div class="news-item" data-id="${item.id}">
+                    <span class="news-category">${item.category}</span>
+                    <span class="news-title">${item.title}</span>
+                    <span class="news-summary">${item.summary}</span>
+                    ${index < duplicatedItems.length - 1 ? '<span class="news-divider">|</span>' : ''}
+                </div>
+            `).join('');
+            
+            // 绑定点击事件
+            track.querySelectorAll('.news-item').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    openNews(id);
+                });
+            });
+        }
+        
+        // 点击热讯跳转
+        function openNews(id) {
+            const item = window.newsItems.find(n => n.id === id);
+            if (item) {
+                const content = `${item.title}。${item.summary}`;
+                
+                // 判断是否为开发环境 (localhost 或 127.0.0.1 或 file协议)
+                const isDev = window.location.hostname === 'localhost' || 
+                              window.location.hostname === '127.0.0.1' ||
+                              window.location.protocol === 'file:';
+                const baseUrl = isDev ? 'http://localhost:3000' : 'https://zchat-demo.vercel.app';
+                
+                // 跳转到根路径
+                window.location.href = `${baseUrl}/?news=` + encodeURIComponent(content);
+            }
+        }
+        
+        // 初始化热讯
+        renderNewsTicker();
+    </script>
+</body>
+</html>

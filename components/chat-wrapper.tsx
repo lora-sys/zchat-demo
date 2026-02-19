@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import LoadingScreen from "./loading-screen";
-import Ticker from "./ticker";
-import { Chat } from "./chat";
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import LoadingScreen from './loading-screen';
+import Ticker from './ticker';
+import { Chat } from './chat';
 
 interface ChatWrapperProps {
   id: string;
@@ -19,9 +20,13 @@ export function ChatWrapper({ id, selectedModelId }: ChatWrapperProps) {
   const [hasVisited, setHasVisited] = useState<boolean | null>(null);
   const [showLoading, setShowLoading] = useState(true);
 
+  // 获取 URL 参数
+  const searchParams = useSearchParams();
+  const newsParam = searchParams.get('news');
+
   useEffect(() => {
     // 客户端检查 localStorage
-    const visited = localStorage.getItem("zchat-visited");
+    const visited = localStorage.getItem('zchat-visited');
     setHasVisited(!!visited);
 
     if (visited) {
@@ -30,22 +35,38 @@ export function ChatWrapper({ id, selectedModelId }: ChatWrapperProps) {
     }
   }, []);
 
+  // 处理热讯参数 - 来自首页热讯点击
+  useEffect(() => {
+    if (!showLoading && newsParam && !hasGreeted) {
+      // 延迟发送消息，确保 Chat 组件已加载
+      setTimeout(() => {
+        const decodedNews = decodeURIComponent(newsParam);
+        chatRef.current?.sendMessage(`请解读这条热讯：${decodedNews}`);
+        setHasGreeted(true);
+
+        // 清除 URL 参数
+        window.history.replaceState({}, '', '/chat');
+      }, 1000);
+    }
+  }, [showLoading, newsParam, hasGreeted]);
+
   useEffect(() => {
     // 当 LoadingScreen 完成（showLoading 变为 false）
     // 且是首次访问（!hasVisited）
     // 且还没问候过（!hasGreeted）
-    if (!showLoading && !hasVisited && !hasGreeted) {
+    // 且没有热讯参数
+    if (!showLoading && !hasVisited && !hasGreeted && !newsParam) {
       setTimeout(() => {
-        chatRef.current?.sendMessage("系统已就绪...");
+        chatRef.current?.sendMessage('系统已就绪...');
         setHasGreeted(true);
       }, 500);
     }
-  }, [showLoading, hasVisited, hasGreeted]);
+  }, [showLoading, hasVisited, hasGreeted, newsParam]);
 
   const handleLoadingFinished = () => {
     setShowLoading(false);
     // 标记已访问
-    localStorage.setItem("zchat-visited", "true");
+    localStorage.setItem('zchat-visited', 'true');
   };
 
   // 直接调用 Chat 组件的 sendMessage 方法
