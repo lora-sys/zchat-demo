@@ -398,6 +398,72 @@
             z-index: 1000;
             letter-spacing: 1px;
         }
+        
+        /* Waitlist Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid rgba(0, 255, 179, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .modal-close:hover {
+            color: var(--primary);
+        }
+        .modal-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .modal-desc {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .modal-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -764,7 +830,7 @@
                 Early participants receive exclusive $EDGE token airdrops and governance rights.
             </p>
             <div class="hero-cta">
-                <button class="btn btn-primary" data-lang="cta-btn1">Join Waitlist</button>
+                <button class="btn btn-primary" data-lang="cta-btn1" onclick="openWaitlistModal()">Join Waitlist</button>
                 <a href="litepaper.html" class="btn btn-secondary" data-lang="cta-btn2" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Read Litepaper</a>
             </div>
         </div>
@@ -893,6 +959,41 @@
         
         // 初始化热讯
         renderNewsTicker();
+        
+        // Waitlist Modal
+        function openWaitlistModal() {
+            document.getElementById('waitlistModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeWaitlistModal() {
+            document.getElementById('waitlistModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // 点击背景关闭
+        document.getElementById('waitlistModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWaitlistModal();
+            }
+        });
+        
+        // ESC 关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeWaitlistModal();
+            }
+        });
     </script>
+    
+    <!-- Waitlist Modal -->
+    <div class="modal-overlay" id="waitlistModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeWaitlistModal()">&times;</button>
+            <h3 class="modal-title">Join EdgeBridge Waitlist</h3>
+            <p class="modal-desc">Be the first to access our platform and receive exclusive $EDGE token rewards.</p>
+            <iframe class="modal-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSfUZqpga0rF5T75FcG49UEcZOsBg4RjU5PEKwhhcWaLlyA9xw/viewform?embed=true"></iframe>
+        </div>
+    </div>
 </body>
 </html>
