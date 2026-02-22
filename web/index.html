@@ -56,9 +56,14 @@
         .nav-links { display: flex; gap: 48px; list-style: none; }
         .nav-links a {
             color: var(--text-secondary); text-decoration: none; font-weight: 500;
-            font-size: 15px; transition: color 0.3s ease;
+            font-size: 14px; transition: all 0.3s ease; padding: 8px 0; position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background: var(--primary); transition: width 0.3s ease;
         }
         .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
         .nav-right { display: flex; align-items: center; gap: 24px; }
         .lang-switcher {
             display: flex; align-items: center; gap: 4px; padding: 8px 12px;
@@ -76,96 +81,105 @@
         .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 255, 179, 0.3); }
         .hero {
             position: relative; min-height: 100vh; display: flex; align-items: center;
-            justify-content: center; text-align: center; padding: 0 48px; z-index: 1;
+            justify-content: center; text-align: left; padding: 80px 48px 48px; z-index: 1;
         }
-        .hero-content { max-width: 1000px; animation: fadeInUp 1s ease-out; }
+        .hero-content { max-width: 100%; animation: fadeInUp 1s ease-out; }
         .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px;
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
             background: rgba(0, 255, 179, 0.1); border: 1px solid rgba(0, 255, 179, 0.2);
-            border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 32px; color: var(--primary);
+            border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 24px; color: var(--primary);
         }
         .hero h1 {
-            font-family: 'Syne', sans-serif; font-size: 80px; font-weight: 800;
-            line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px;
+            font-family: 'Syne', sans-serif; font-size: 56px; font-weight: 800;
+            line-height: 1.15; margin-bottom: 24px; letter-spacing: -2px;
         }
         .gradient-text {
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .hero-description {
-            font-size: 22px; color: var(--text-secondary); max-width: 800px;
-            margin: 0 auto 48px; line-height: 1.7;
+            font-size: 20px; color: var(--text-secondary); max-width: 600px;
+            margin: 0 0 48px 0; line-height: 1.7;
         }
         .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .btn {
-            padding: 18px 36px; font-size: 16px; font-weight: 600; border: none;
+            padding: 16px 32px; font-size: 15px; font-weight: 600; border: none;
             border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
             text-decoration: none; display: inline-block;
         }
-        .btn-primary { background: var(--primary); color: var(--dark); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 255, 179, 0.3); }
-        .btn-secondary {
-            background: transparent; color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.1);
+        .btn-primary { 
+            background: var(--primary); color: var(--dark); 
         }
-        .btn-secondary:hover { background: var(--surface); border-color: rgba(255, 255, 255, 0.2); }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 32px rgba(0, 255, 179, 0.4); 
+        }
+        .btn-secondary {
+            background: transparent; color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-secondary:hover { 
+            background: rgba(255, 255, 255, 0.05); 
+            border-color: rgba(0, 255, 179, 0.5); 
+            color: var(--primary);
+        }
         .stats-section {
-            position: relative; z-index: 1; padding: 80px 48px;
+            position: relative; z-index: 1; padding: 60px 48px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .stats-container {
             max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 48px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
         }
-        .stat-item { text-align: center; }
+        .stat-item { text-align: center; padding: 24px; background: var(--surface); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.03); }
         .stat-number {
-            font-family: 'Syne', sans-serif; font-size: 56px; font-weight: 800;
+            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
             color: var(--primary); margin-bottom: 8px; letter-spacing: -1px;
         }
-        .stat-label { font-size: 15px; color: var(--text-secondary); }
-        .features-section { position: relative; z-index: 1; padding: 120px 48px; }
-        .section-header { text-align: center; max-width: 700px; margin: 0 auto 80px; }
+        .stat-label { font-size: 14px; color: var(--text-secondary); }
+        .features-section { position: relative; z-index: 1; padding: 100px 48px; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 60px; }
         .section-tag {
-            display: inline-block; padding: 6px 16px; background: rgba(0, 255, 179, 0.1);
+            display: inline-block; padding: 8px 16px; background: rgba(0, 255, 179, 0.1);
             border: 1px solid rgba(0, 255, 179, 0.2); border-radius: 100px; font-size: 12px;
-            font-weight: 600; margin-bottom: 24px; color: var(--primary);
+            font-weight: 600; margin-bottom: 20px; color: var(--primary);
             text-transform: uppercase; letter-spacing: 1px;
         }
         .section-title {
-            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+            font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800;
             margin-bottom: 16px; letter-spacing: -1px;
         }
-        .section-description { font-size: 18px; color: var(--text-secondary); line-height: 1.7; }
+        .section-description { font-size: 17px; color: var(--text-secondary); line-height: 1.7; }
         .features-grid {
             max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
         }
         .feature-card {
             display: block;
             background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 40px; transition: all 0.3s ease;
+            border-radius: 16px; padding: 32px; transition: all 0.3s ease;
         }
         .feature-card-link { text-decoration: none; color: inherit; display: block; }
-        .feature-card-link:hover .feature-card { border-color: rgba(0, 255, 179, 0.3); transform: translateY(-4px); }
+        .feature-card-link:hover .feature-card { border-color: rgba(0, 255, 179, 0.3); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
         .feature-icon {
-            width: 56px; height: 56px; margin-bottom: 24px; background: rgba(0, 255, 179, 0.1);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px;
+            width: 52px; height: 52px; margin-bottom: 20px; background: rgba(0, 255, 179, 0.1);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px;
         }
         .feature-title {
-            font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 12px;
+            font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 12px;
         }
-        .feature-description { color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+        .feature-description { color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; font-size: 14px; }
         .feature-tags { display: flex; flex-wrap: wrap; gap: 8px; }
         .tag {
             padding: 6px 12px; background: rgba(255, 255, 255, 0.05);
             border-radius: 6px; font-size: 12px; color: var(--text-muted);
         }
-        .tokenomics-section { position: relative; z-index: 1; padding: 120px 48px; background: var(--darker); }
+        .tokenomics-section { position: relative; z-index: 1; padding: 100px 48px; background: var(--darker); }
         .architecture-section { 
-            position: relative; z-index: 1; padding: 120px 48px; 
+            position: relative; z-index: 1; padding: 100px 48px; 
             background: linear-gradient(180deg, var(--dark) 0%, var(--darker) 100%);
         }
         .architecture-table-container {
-            max-width: 1200px; margin: 60px auto;
+            max-width: 1000px; margin: 50px auto;
         }
         .table-wrapper-home {
             overflow-x: auto; 
@@ -208,17 +222,17 @@
         }
         
         .tokenomics-container {
-            max-width: 900px; margin: 60px auto;
+            max-width: 800px; margin: 50px auto;
         }
         .token-distribution-full {
             background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 48px;
+            border-radius: 16px; padding: 40px;
         }
         .token-distribution-full h3 { 
-            font-family: 'Syne', sans-serif; font-size: 28px; margin-bottom: 40px; 
+            font-family: 'Syne', sans-serif; font-size: 24px; margin-bottom: 32px; 
             text-align: center; color: var(--text-primary);
         }
-        .distribution-item { margin-bottom: 32px; }
+        .distribution-item { margin-bottom: 24px; }
         .distribution-item:last-child { margin-bottom: 0; }
         .distribution-header { margin-bottom: 8px; }
         .distribution-label { 
@@ -237,10 +251,13 @@
             padding-left: 16px; border-left: 2px solid rgba(0, 255, 179, 0.3);
             line-height: 1.6;
         }
-        .roadmap-section { position: relative; z-index: 1; padding: 120px 48px; }
-        .roadmap-timeline { max-width: 1400px; margin: 60px auto; position: relative; }
-        .roadmap-phase {
-            display: grid; grid-template-columns: 200px 1fr; gap: 48px; margin-bottom: 80px; position: relative;
+        .roadmap-section { position: relative; z-index: 1; padding: 100px 48px; }
+        .roadmap-timeline { max-width: 1000px; margin: 50px auto; position: relative; }
+        .cta-section { position: relative; z-index: 1; padding: 100px 48px; text-align: center; }
+        .cta-content {
+            max-width: 700px; margin: 0 auto; padding: 60px 48px;
+            background: var(--surface); border: 1px solid rgba(0, 255, 179, 0.15); border-radius: 20px;
+            background: linear-gradient(135deg, var(--surface) 0%, rgba(0, 255, 179, 0.05) 100%);
         }
         .phase-header { text-align: right; padding-right: 48px; border-right: 3px solid var(--primary); }
         .phase-number {
@@ -264,23 +281,14 @@
         }
         .milestone-title { font-weight: 600; margin-bottom: 8px; font-size: 14px; }
         .milestone-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-        .cta-section { position: relative; z-index: 1; padding: 120px 48px; text-align: center; }
-        .cta-content {
-            max-width: 800px; margin: 0 auto; padding: 80px 60px;
-            background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px;
-        }
-        .cta-title {
-            font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
-            margin-bottom: 24px; letter-spacing: -1px;
-        }
-        .cta-desc { font-size: 18px; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.7; }
+        .cta-section .hero-cta { justify-content: center; }
         footer {
-            position: relative; z-index: 1; background: var(--darker); padding: 80px 48px 40px;
+            position: relative; z-index: 1; background: var(--darker); padding: 60px 48px 32px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .footer-container {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px;
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;
         }
         .footer-section h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 20px; }
         .footer-section ul { list-style: none; }
@@ -303,16 +311,22 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Mobile Responsive */
+        /* Tablet */
         @media (max-width: 1200px) {
-            .hero h1 { font-size: 64px; }
-            .cta-title { font-size: 40px; }
+            .hero h1 { font-size: 48px; }
+            .cta-title { font-size: 36px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-title { font-size: 36px; }
         }
         
         @media (max-width: 1024px) {
             .nav-links { display: none; }
             .mobile-menu-btn { display: block; }
-            .hero h1 { font-size: 52px; }
-            .hero-description { font-size: 20px; max-width: 600px; }
+            .hero-wrapper { gap: 32px; }
+            .hero h1 { font-size: 42px; }
+            .hero-description { font-size: 18px; max-width: 100%; }
+            .hero-right { min-width: 240px; }
+            .news-panel-list { max-height: 350px; }
             .roadmap-phase { grid-template-columns: 1fr; }
             .phase-header {
                 text-align: left; border-right: none; border-bottom: 3px solid var(--primary);
@@ -329,34 +343,31 @@
             .btn-nav { padding: 10px 16px; font-size: 13px; }
             
             .hero { 
-                padding: 120px 20px 80px; 
+                padding: 80px 20px 48px; 
                 min-height: auto;
-                padding-top: 140px;
             }
-            .hero h1 { font-size: 36px; letter-spacing: -1px; }
+            .hero-wrapper {
+                flex-direction: column;
+                gap: 32px;
+                align-items: stretch;
+            }
+            .hero-right {
+                width: 100%;
+                min-width: auto;
+            }
+            .hero h1 { font-size: 32px; letter-spacing: -1px; }
             .hero-badge { font-size: 12px; padding: 6px 14px; margin-bottom: 24px; }
             .hero-description { font-size: 16px; margin-bottom: 32px; }
+            .hero-cta { justify-content: center; }
             
-            .section-header { margin-bottom: 48px; }
+            .section-header { margin-bottom: 40px; }
             .section-title { font-size: 28px; }
             .section-description { font-size: 15px; }
             
-            .btn { 
-                padding: 14px 24px; 
-                font-size: 14px; 
-                width: 100%;
-                max-width: 280px;
+            .features-grid { 
+                grid-template-columns: 1fr; 
+                gap: 16px; 
             }
-            .hero-cta { gap: 12px; }
-            
-            .stats-section, .features-section, .tokenomics-section, .architecture-section, .roadmap-section, .cta-section {
-                padding: 60px 20px;
-            }
-            .stats-container { gap: 32px; }
-            .stat-number { font-size: 40px; }
-            .stat-label { font-size: 13px; }
-            
-            .features-grid { grid-template-columns: 1fr; gap: 16px; }
             .feature-card { padding: 24px; }
             .feature-icon { width: 48px; height: 48px; font-size: 24px; margin-bottom: 16px; }
             .feature-title { font-size: 18px; }
@@ -394,16 +405,8 @@
             .footer-section h3 { font-size: 14px; margin-bottom: 16px; }
             .footer-bottom { font-size: 12px; padding-top: 24px; }
             
-            /* 热讯Ticker移动端 */
-            .news-label { display: none; }
-            .news-ticker { 
-                top: 60px; 
-                padding: 8px 0;
-            }
-            .news-item { padding: 0 24px; }
-            .news-category { font-size: 10px; padding: 2px 6px; }
-            .news-title { font-size: 12px; }
-            .news-summary { display: none; }
+            /* 热讯面板移动端 */
+            .news-panel-list { max-height: 300px; }
             
             /* Modal移动端 */
             .modal-content { 
@@ -420,86 +423,115 @@
         }
         
         @media (max-width: 480px) {
-            .hero h1 { font-size: 28px; }
+            .hero h1 { font-size: 26px; }
             .hero-content { max-width: 100%; }
-            .section-title { font-size: 24px; }
+            .hero-description { font-size: 14px; }
+            .section-title { font-size: 22px; }
             .btn { padding: 12px 20px; font-size: 14px; }
-            .stat-number { font-size: 32px; }
+            .stat-number { font-size: 28px; }
+            .stat-label { font-size: 12px; }
             .feature-card { padding: 20px; }
             .phase-content { padding: 20px; }
             .cta-content { padding: 32px 16px; }
+            .cta-title { font-size: 24px; }
+            .stats-container { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-item { padding: 12px; }
         }
         
-        /* 热讯Ticker样式 */
-        .news-ticker {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 100%;
-            background: rgba(11, 13, 23, 0.95);
-            border-bottom: 1px solid var(--primary);
-            padding: 10px 0;
-            z-index: 999;
-            overflow: hidden;
-        }
-        .news-ticker-track {
+        /* Hero 布局 */
+        .hero-wrapper {
             display: flex;
-            width: max-content;
-            animation: newsScroll 40s linear infinite;
-        }
-        .news-ticker-track:hover {
-            animation-play-state: paused;
-        }
-        .news-item {
-            flex-shrink: 0;
-            padding: 0 48px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
+            gap: 48px;
+            max-width: 1400px;
+            margin: 0 auto;
             align-items: center;
-            gap: 12px;
-            white-space: nowrap;
+            width: 100%;
         }
-        .news-item:hover {
+        .hero-left { flex: 3; }
+        .hero-right { flex: 1; min-width: 280px; }
+        
+        /* 让 hero 内容垂直居中 */
+        .hero-left .hero-content {
+            padding-top: 20px;
+        }
+        
+        /* 热讯面板样式 */
+        .news-panel {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .news-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 255, 179, 0.2);
+            background: rgba(0, 255, 179, 0.05);
+        }
+        .news-panel-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--primary);
         }
-        .news-category {
-            font-size: 11px;
-            padding: 3px 8px;
+        .news-panel-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .news-panel-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .news-panel-item:last-child {
+            border-bottom: none;
+        }
+        .news-panel-item:hover {
+            background: rgba(0, 255, 179, 0.05);
+        }
+        .news-panel-category {
+            font-size: 10px;
+            padding: 2px 6px;
             background: rgba(0, 255, 179, 0.15);
             border: 1px solid rgba(0, 255, 179, 0.3);
             border-radius: 4px;
             color: var(--primary);
             font-weight: 600;
+            display: inline-block;
+            margin-bottom: 6px;
         }
-        .news-title {
+        .news-panel-item-title {
             font-weight: 600;
-            font-size: 14px;
-        }
-        .news-summary {
-            color: var(--text-secondary);
             font-size: 13px;
+            margin-bottom: 4px;
+            line-height: 1.4;
         }
-        .news-divider {
+        .news-panel-item-summary {
             color: var(--text-muted);
-            font-size: 20px;
-            opacity: 0.5;
-        }
-        @keyframes newsScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .news-label {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            background: var(--primary);
-            color: var(--dark);
-            padding: 10px 16px;
             font-size: 12px;
-            font-weight: 700;
-            z-index: 1000;
-            letter-spacing: 1px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .news-panel-footer {
+            padding: 12px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+        .news-panel-view-all {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .news-panel-view-all:hover {
+            opacity: 0.8;
         }
         
         /* Waitlist Modal */
@@ -647,26 +679,35 @@
         <a href="litepaper.html" onclick="event.preventDefault(); navigateWithLang('litepaper.html'); closeMobileMenu();"><span data-lang="nav-litepaper">Litepaper</span></a>
     </div>
     
-    <!-- 热讯Ticker -->
-    <div class="news-label">🔥 热讯</div>
-    <div class="news-ticker" id="newsTicker">
-        <div class="news-ticker-track" id="newsTrack"></div>
-    </div>
-    
     <section class="hero" id="hero">
-        <div class="hero-content">
-            <div class="hero-badge"><span data-lang="hero-badge">Next-Generation DeFi Infrastructure</span></div>
-            <h1>
-                <span data-lang="hero-title-1">The Decentralized Bridge</span><br/>
-                <span class="gradient-text" data-lang="hero-title-2">to Future Finance</span>
-            </h1>
-            <p class="hero-description" data-lang="hero-description">
-                Empowering Gen Z with AI education, autonomous agents, prediction markets, 
-                embodied robotics, and zero-knowledge encryption for true financial freedom
-            </p>
-            <div class="hero-cta">
-                <button class="btn btn-primary" data-lang="btn-explore">Start Exploring</button>
-                <a href="litepaper.html" class="btn btn-secondary" data-lang="btn-litepaper" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Read Litepaper</a>
+        <div class="hero-wrapper">
+            <div class="hero-left">
+                <div class="hero-content">
+                    <div class="hero-badge"><span data-lang="hero-badge">Next-Generation DeFi Infrastructure</span></div>
+                    <h1>
+                        <span data-lang="hero-title-1">The Decentralized Bridge</span><br/>
+                        <span class="gradient-text" data-lang="hero-title-2">to Future Finance</span>
+                    </h1>
+                    <p class="hero-description" data-lang="hero-description">
+                        Empowering Gen Z with AI education, autonomous agents, prediction markets, 
+                        embodied robotics, and zero-knowledge encryption for true financial freedom
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn btn-primary" data-lang="btn-explore">Start Exploring</button>
+                        <a href="litepaper.html" class="btn btn-secondary" data-lang="btn-litepaper" onclick="event.preventDefault(); navigateWithLang('litepaper.html');">Read Litepaper</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="news-panel">
+                    <div class="news-panel-header">
+                        <div class="news-panel-title" data-lang="news-panel-title">🔥 Hot News</div>
+                    </div>
+                    <div class="news-panel-list" id="newsPanelList"></div>
+                    <div class="news-panel-footer">
+                        <span class="news-panel-view-all" data-lang="news-view-all" onclick="window.open('https://zchat-demo.vercel.app/', '_blank')">View All →</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1040,8 +1081,8 @@
         </div>
     </footer>
     
-    <script src="translations.js"></script>
-    <script src="news.js"></script>
+    <script src="translations.js?v=20260222"></script>
+    <script src="news.js?v=20260222"></script>
     <script>
         let currentLang = 'en';
         const navbar = document.getElementById('navbar');
@@ -1070,24 +1111,23 @@
         const tokenSection = document.querySelector('.token-distribution');
         tokenSection && observer.observe(tokenSection);
         
-        // 热讯Ticker渲染
-        function renderNewsTicker() {
-            const track = document.getElementById('newsTrack');
-            if (!track || !window.newsItems) return;
+        // 热讯面板渲染
+        function renderNewsPanel() {
+            const list = document.getElementById('newsPanelList');
+            if (!list || !window.newsItems) return;
             
-            // 重复两次实现无缝滚动
-            const duplicatedItems = [...window.newsItems, ...window.newsItems];
-            track.innerHTML = duplicatedItems.map((item, index) => `
-                <div class="news-item" data-id="${item.id}">
-                    <span class="news-category">${item.category}</span>
-                    <span class="news-title">${item.title}</span>
-                    <span class="news-summary">${item.summary}</span>
-                    ${index < duplicatedItems.length - 1 ? '<span class="news-divider">|</span>' : ''}
+            // 只显示前 6 条热讯
+            const displayItems = window.newsItems.slice(0, 6);
+            list.innerHTML = displayItems.map(item => `
+                <div class="news-panel-item" data-id="${item.id}">
+                    <span class="news-panel-category">${item.category}</span>
+                    <div class="news-panel-item-title">${item.title}</div>
+                    <div class="news-panel-item-summary">${item.summary}</div>
                 </div>
             `).join('');
             
             // 绑定点击事件
-            track.querySelectorAll('.news-item').forEach(el => {
+            list.querySelectorAll('.news-panel-item').forEach(el => {
                 el.addEventListener('click', function() {
                     const id = parseInt(this.getAttribute('data-id'));
                     openNews(id);
@@ -1101,11 +1141,8 @@
             if (item) {
                 const content = `${item.title}。${item.summary}`;
                 
-                // 判断是否为开发环境 (localhost 或 127.0.0.1 或 file协议)
-                const isDev = window.location.hostname === 'localhost' || 
-                              window.location.hostname === '127.0.0.1' ||
-                              window.location.protocol === 'file:';
-                const baseUrl = isDev ? 'http://localhost:3000' : 'https://zchat-demo.vercel.app';
+                // 统一跳转到 Vercel
+                const baseUrl = 'https://zchat-demo.vercel.app';
                 
                 // 跳转到根路径
                 window.location.href = `${baseUrl}/?news=` + encodeURIComponent(content);
@@ -1113,7 +1150,14 @@
         }
         
         // 初始化热讯
-        renderNewsTicker();
+        function initNews() {
+            if (window.newsItems) {
+                renderNewsPanel();
+            } else {
+                setTimeout(initNews, 100);
+            }
+        }
+        initNews();
         
         // Waitlist Modal
         function openWaitlistModal() {
