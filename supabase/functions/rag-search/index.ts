@@ -1,83 +1,111 @@
-
 const JINA_API_URL = 'https://api.jina.ai/v1/embeddings'
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
-const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')
+const JINA_API_KEY = Deno.env.get('JINA_API_KEY')
 
 interface JinaResponse {
   data: Array<{ embedding: number[] }>
 }
 
+interface SearchResult {
+  id: string
+  content: string
+  metadata: Record<string, unknown>
+  similarity: number
+}
+
 async function getEmbedding(text: string): Promise<number[]> {
+  if (!JINA_API_KEY) {
+    throw new Error('JINA_API_KEY not configured')
+  }
+
   const response = await fetch(JINA_API_URL, {
     method: 'POST',
     headers: {
+      'Authorization': `Bearer ${JINA_API_KEY}`,
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${Deno.env.get('JINA_API_KEY')}`
     },
     body: JSON.stringify({
-      model: "jina-embeddings-v3",
+      model: 'jina-embeddings-v3',
       input: [text],
-      task: 'retrieval.query'
-    })
+      task: 'retrieval.query',
+    }),
   })
+
+  if (!response.ok) {
+    throw new Error(`Jina API error: ${response.status}`)
+  }
 
   const data: JinaResponse = await response.json()
   return data.data[0].embedding
 }
 
-Deno.serve(async (req) => {
-  // 处理跨域请求
+async function searchSimilarChunks(embedding: number[], limit: number): Promise<SearchResult[]> {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error('Supabase not configured')
+  }
+
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/match_knowledge`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      query_embedding: embedding,
+      match_threshold: 0.7,
+      match_count: limit,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Supabase RPC error: ${response.status}`)
+  }
+
+  return await response.json()
+}
+
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
+      status: 204,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': "POST",
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
     })
   }
 
   try {
+    const { query, topK = 5 } = await req.json()
 
-    const { query, topK=3} = await req.json()
+    if (!query) {
+      return new Response(
+        JSON.stringify({ error: 'query is required' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
 
-    // get query vector
     const embedding = await getEmbedding(query)
+    const results = await searchSimilarChunks(embedding, topK)
 
-    // call supabase rpc query
-
-    const supabaseRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/rpc/match_knowledge`,
+    return new Response(
+      JSON.stringify(results),
       {
-        method: 'POST',
+        status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-        }
-        ,
-        body: JSON.stringify({
-          query_embedding: embedding,
-          match_count: topK
-        })
+          'Access-Control-Allow-Origin': '*',
+        },
       }
     )
-    const results =  await supabaseRes.json()
-
-    // return result
-    return new Response(JSON.stringify(results), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500 }
+      JSON.stringify({ error: message }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
-
-
 })

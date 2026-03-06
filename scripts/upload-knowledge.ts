@@ -8,13 +8,13 @@
  */
 
 import 'dotenv/config'
-import * as fs from 'fs'
-import * as path from 'path'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 
 const JINA_API_URL = 'https://api.jina.ai/v1/embeddings'
-const JINA_API_KEY = process.env.JINA_API_KEY!
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const JINA_API_KEY = process.env.JINA_API_KEY
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // 分块配置
 const CHUNK_CONFIG = {
@@ -368,7 +368,7 @@ async function main() {
 
   for (let i = 0; i < allItems.length; i++) {
     const item = allItems[i]
-    const shortTitle = item.title.length > 30 ? item.title.slice(0, 30) + '...' : item.title
+    const shortTitle = item.title.length > 30 ? `${item.title.slice(0, 30)}...` : item.title
     console.log(`[${i + 1}/${allItems.length}] ${shortTitle} (${item.content.length}字)`)
 
     const result = await insertToSupabase(item)

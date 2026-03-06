@@ -8,9 +8,9 @@
 import 'dotenv/config'
 
 const JINA_API_URL = 'https://api.jina.ai/v1/embeddings'
-const JINA_API_KEY = process.env.JINA_API_KEY!
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const JINA_API_KEY = process.env.JINA_API_KEY
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // 测试知识库数据
 const KNOWLEDGE_DATA = [

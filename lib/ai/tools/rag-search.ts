@@ -1,8 +1,8 @@
 import { tool } from 'ai'
 import { z } from 'zod'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 interface SearchResult {
   id: number
@@ -21,6 +21,14 @@ export const ragSearch = tool({
     topK: z.number().optional().default(3).describe('返回结果数量'),
   }),
   execute: async ({ query, topK = 3 }) => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      return {
+        success: false,
+        error: 'Missing Supabase configuration',
+        results: [],
+      }
+    }
+
     try {
       const response = await fetch(
         `${SUPABASE_URL}/functions/v1/rag-search`,
