@@ -16,6 +16,7 @@ import { deployVaultContract } from '@/lib/ai/tools/deploy-vault-contract';
 import { generateUUID, getMostRecentUserMessage } from '@/lib/utils';
 import { compressContext } from '@/lib/ai/utils/context-manager';
 import { truthOracle } from '@/lib/ai/tools/truth-oracle';
+import { ragSearch } from '@/lib/ai/tools/rag-search';
 export const maxDuration = 60;
 
 type AllowedTools =
@@ -24,9 +25,9 @@ type AllowedTools =
   | 'simulateZKProof'
   | 'estimateFiatRisk'
   | 'deployVaultContract'
-  | 'truthOracle';
+  | 'truthOracle'
+  | 'ragSearch';
 
-// TODO: SEARCH TOOL
 const allTools: AllowedTools[] = [
   'callAAAgent',
   'scanChainAssets',
@@ -34,6 +35,7 @@ const allTools: AllowedTools[] = [
   'estimateFiatRisk',
   'deployVaultContract',
   'truthOracle',
+  'ragSearch',
 ];
 export async function POST(request: Request) {
   const {
@@ -78,6 +80,7 @@ export async function POST(request: Request) {
           estimateFiatRisk,
           deployVaultContract,
           truthOracle,
+          ragSearch,
         },
         experimental_telemetry: {
           isEnabled: true,

@@ -20,6 +20,7 @@ import { ZKProofCard } from './tool-visualizations/ZKProofCard';
 import { FiatRiskCard } from './tool-visualizations/FiatRiskCard';
 import { VaultDeployCard } from './tool-visualizations/VaultDeployCard';
 import { TruthOracleCard } from './tool-visualizations/TruthOracleCard';
+import { RAGSearchCard } from './tool-visualizations/RAGSearchCard';
 const PurePreviewMessage = ({
   chatId,
   message,
@@ -137,6 +138,9 @@ const PurePreviewMessage = ({
                         {toolName === 'truthOracle' && (
                           <TruthOracleCard status="result" result={result} />
                         )}
+                        {toolName === 'ragSearch' && (
+                          <RAGSearchCard status="result" result={result} />
+                        )}
                       </div>
                     );
                   }
@@ -163,6 +167,9 @@ const PurePreviewMessage = ({
                           status="loading"
                           result={{ category: 'macro' }}
                         />
+                      )}
+                      {toolName === 'ragSearch' && (
+                        <RAGSearchCard status="loading" />
                       )}
                     </div>
                   );
